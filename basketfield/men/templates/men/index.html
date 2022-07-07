@@ -1,0 +1,26 @@
+{% extends 'men/base.html' %}
+
+{% block content %}
+<ul class="list-articles">
+	{% for p in posts %}
+			<li><div class="article-panel">
+		<p class="first">Категория: {{ p.cat }}</p>
+		<p class="last">Дата: {{ p.time_update }}</p>
+		</div>
+	{% if p.photo %}
+				<p><img class="img-article-left thumb" src="{{ p.photo.url }}"></p>
+	{% endif %}
+		<h2>{{p.title}}</h2>
+		{{p.content|linebreaks|truncatewords:50}}
+			<div>
+				<div class="clear like div1"></div>
+				<span class="div1">{{ p.likes.get_likes.count }}</span>
+				<div class="clear dislike div1"></div>
+				<span class="div1">{{ p.likes.get_dislikes.count }}</span>
+				<span class="div1"><a href="{{ p.get_absolute_url }}#comments">Комментарии: {{ p.comments.get_comments.count }}</a>	</span>
+				<p class="link-read-post"><a href="{{ p.get_absolute_url }}">Читать пост</a></p>
+			</div>
+			</li>
+	{% endfor %}
+</ul>
+{% endblock %}

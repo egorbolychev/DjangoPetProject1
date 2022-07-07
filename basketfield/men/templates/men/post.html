@@ -1,0 +1,66 @@
+{% extends 'men/base.html' %}
+{% load static %}
+
+{% block content %}
+	<form method="post" action="{% url 'post_like' post.pk %}">
+		{% csrf_token %}
+				  <div style="margin-top: 10px; width: 30px; height: 30px; margin-left: 80%;">
+					  <input type="hidden" name="text" value="{{ request.path }}">
+					  {% if is_liked %}
+					  <button class="like_clicked" type="submit">
+					  </button>
+					  {% else %}
+					  <button class="like" type="submit">
+					  </button>
+					  {% endif %}
+					  <span class="clicked">{{ likess }}</span>
+				  </div>
+	</form>
+
+	<form method="post" action="{% url 'post_dislike' post.pk %}">
+              {% csrf_token %}
+              <div style="margin-top: -27px; width: 30px; height: 30px; margin-left: 87%;">
+                  <input type="hidden" name="text" value="{{ request.path }}">
+                  {% if is_disliked %}
+					  <button class="dislike_clicked" type="submit">
+					  </button>
+					  {% else %}
+					  <button class="dislike" type="submit">
+					  </button>
+					  {% endif %}
+				  <span class="clicked">{{ dislikess }}</span>
+              </div>
+	</form>
+	<h1>{{post.title}}</h1>
+	{% if post.photo %}
+
+				<p><img class="img-article-left thumb" src="{{ post.photo.url }}"></p>
+	{% endif %}
+		{{ post.content|linebreaks }}
+			<div class="clear"></div>
+	<div id="comments" class="article-panel">
+		<h3 class="first">Комментарии</h3>
+	</div>
+
+	{% for com in comments %}
+	<div class="comment">
+		<p class="comment-user">Пользователь: <b>{{ com.user }}</b></p>
+		<span class="comment-user">{{ com.time_create }}</span>
+		<p>{{ com.comment}}</p>
+	</div>
+	{% endfor %}
+
+	<form action="{% url 'post' post.slug %}" method="post">
+    {% csrf_token %}
+
+    <div class="form-error">{{ form.non_field_errors }}</div>
+
+    {% for f in form %}
+    <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+    <div class="form-error">{{ f.errors }}</div>
+    {% endfor %}
+
+    <button type="submit">Добавить</button>
+	</form>
+
+{% endblock %}
